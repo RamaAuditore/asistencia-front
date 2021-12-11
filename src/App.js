@@ -3,12 +3,15 @@ import {Formulario,ContenedorBotonCentrado,Boton,MensajeError,MensajeExito} from
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
 import Input from './componentes/Input';
+import { unstable_renderSubtreeIntoContainer } from 'react-dom';
  const App = () => {
      const[nombre,cambiarNombre] = useState({campo:'', valido:null});
      const[dni,cambiarDni] = useState({campo:'', valido:null});
      const[clave,cambiarClave] = useState({campo:'', valido:null});
      const[repitaclave,cambiarClave2] = useState({campo:'', valido:null});
      const[roles,cambiarRoles] = useState({campo:'', valido:null});
+     const[formularioValido, cambiarformularioValido] =useState(null);
+
      const expresiones = {
         nombre: /^[a-zA-ZÀ-ÿ\s]{1,22}$/, // Letras y espacios, pueden llevar acentos.
         dni:/^.{10}$/, //Numeros
@@ -30,9 +33,28 @@ import Input from './componentes/Input';
             
         }
     }
+    const onSubmit = (e) => {
+        e.preventDefault();
+        if(
+            nombre.valido ==='true' &&
+           dni.valido === 'true' &&
+           clave.valido === 'true' &&
+           repitaclave.valido === 'true' &&
+           roles.valido === 'true'           
+        ){
+           cambiarformularioValido(true);
+           cambiarNombre({campo: '', valido: null});
+           cambiarDni({campo: '', valido: null});
+           cambiarClave({campo: '', valido: null});
+           cambiarClave2({campo: '', valido: null});
+           cambiarRoles({campo: '', valido: null});
+        } else{
+            cambiarformularioValido(false);
+        }
+    }
      return ( 
          <main>
-             <Formulario action="">
+             <Formulario action="" onSubmit={onSubmit}>
                 <Input
                   estado={nombre}
                   cambiarEstado={cambiarNombre}
@@ -87,7 +109,7 @@ import Input from './componentes/Input';
               
                 
 
-             {false && <MensajeError>
+             {formularioValido === false && <MensajeError>
                  <p>
                      <FontAwesomeIcon icon={faExclamationTriangle}/>
                      <b>Error:</b>Por favor rellena el formulario correctamente
@@ -95,7 +117,7 @@ import Input from './componentes/Input';
              </MensajeError>}
              <ContenedorBotonCentrado>
                  <Boton type="submit">Ingresar</Boton>
-                 <MensajeExito>ingresado correctamente</MensajeExito>         
+                 {formularioValido === true && <MensajeExito>datos ingresado correctamente</MensajeExito>}         
              </ContenedorBotonCentrado>
              
              </Formulario>

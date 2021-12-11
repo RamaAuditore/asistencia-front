@@ -101,8 +101,7 @@ transition: .1s ease all;
 `;
 const MensajeExito = styled.p`
 font-size: 14px;
-color: ${colores.enviado};
-display:none;`;
+color: ${colores.enviado};`;
 
 const MensajeError = styled.div`
 height:45px;
